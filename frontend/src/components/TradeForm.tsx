@@ -16,16 +16,20 @@ interface Props {
   onClose: () => void;
 }
 
-const EMPTY: TradeEntryData = {
+const EMPTY: Omit<TradeEntryData, 'entry_date'> = {
   stock: '',
-  entry_date: '',
   entry_quantity: 0,
   entry_price: 0,
   reason_for_entry: '',
 };
 
+const getTodayDate = () => new Date().toISOString().slice(0, 10);
+
 export default function TradeForm({ trade, currency, onSave, onClose }: Props) {
-  const [form, setForm] = useState<TradeEntryData>(EMPTY);
+  const [form, setForm] = useState<TradeEntryData>({
+    ...EMPTY,
+    entry_date: getTodayDate(),
+  });
   const [saving, setSaving] = useState(false);
 
   const sym = currency === 'INR' ? '₹' : '$';
@@ -42,7 +46,7 @@ export default function TradeForm({ trade, currency, onSave, onClose }: Props) {
         reason_for_entry: trade.reason_for_entry,
       });
     } else {
-      setForm(EMPTY);
+      setForm({ ...EMPTY, entry_date: getTodayDate() });
     }
   }, [trade]);
 

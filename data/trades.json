@@ -686,7 +686,23 @@
     "exit_price": 3995.3,
     "reason_for_entry": "Base BO",
     "reason_for_exit": "",
-    "emotions": ""
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-04-27",
+        "quantity": 4,
+        "price": 3995.3,
+        "reason": "",
+        "emotions": ""
+      },
+      {
+        "date": "2026-04-27",
+        "quantity": 4,
+        "price": 4022.3,
+        "reason": "The last 2 candles are red. It looks like some profit booking started. Stock can be rebought for the next base breakout. ",
+        "emotions": ""
+      }
+    ]
   },
   {
     "id": 54,
@@ -739,5 +755,35 @@
     "reason_for_entry": "Defence Theme and Base BO",
     "reason_for_exit": "",
     "emotions": ""
+  },
+  {
+    "stock": "APOLLO",
+    "entry_date": "2026-04-27",
+    "entry_quantity": 100,
+    "entry_price": 297,
+    "reason_for_entry": "BO Break out with good volume.",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 58,
+    "created_at": "2026-04-27T09:18:12.776Z"
+  },
+  {
+    "stock": "KIRLOSENG",
+    "entry_date": "2026-04-27",
+    "entry_quantity": 12,
+    "entry_price": 1668.5,
+    "reason_for_entry": "Base BO breakout with good volume. 7 Bar Stock",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 59,
+    "created_at": "2026-04-27T09:21:00.745Z"
   }
 ]
