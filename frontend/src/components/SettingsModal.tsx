@@ -3,14 +3,15 @@ import { Settings } from '../types';
 
 interface Props {
   settings: Settings;
+  currentUsdToInr?: number;
+  currentUsdToInrDate?: string;
   onSave: (s: Settings) => Promise<void>;
   onClose: () => void;
 }
 
-export default function SettingsModal({ settings, onSave, onClose }: Props) {
+export default function SettingsModal({ settings, currentUsdToInr, currentUsdToInrDate, onSave, onClose }: Props) {
   const [portfolioSize, setPortfolioSize] = useState(String(settings.portfolio_size));
   const [usPortfolioSize, setUsPortfolioSize] = useState(String(settings.us_portfolio_size));
-  const [usdToInr, setUsdToInr] = useState(String(settings.usd_to_inr));
   const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,7 +21,7 @@ export default function SettingsModal({ settings, onSave, onClose }: Props) {
       await onSave({
         portfolio_size: parseFloat(portfolioSize) || 300000,
         us_portfolio_size: parseFloat(usPortfolioSize) || 50000,
-        usd_to_inr: parseFloat(usdToInr) || 84,
+        usd_to_inr: settings.usd_to_inr,
       });
     } finally {
       setSaving(false);
@@ -73,16 +74,13 @@ export default function SettingsModal({ settings, onSave, onClose }: Props) {
               </div>
               <div className="form-group" style={{ marginTop: 12 }}>
                 <label>USD → INR Exchange Rate</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={usdToInr}
-                  onChange={e => setUsdToInr(e.target.value)}
-                  placeholder="84"
-                />
+                <div style={{ padding: '10px 12px', background: '#f8f9fa', borderRadius: 6, color: '#111' }}>
+                  {currentUsdToInr
+                    ? `₹${currentUsdToInr.toFixed(2)}${currentUsdToInrDate ? ` (as of ${currentUsdToInrDate})` : ''}`
+                    : 'Not available yet'}
+                </div>
                 <span style={{ fontSize: 11, color: '#6c757d', marginTop: 4 }}>
-                  Used to display US trades in ₹. e.g. $1 = ₹{(parseFloat(usdToInr) || 0).toLocaleString('en-IN')}
+                  This value is read-only and reflects the latest known historical USD→INR rate.
                 </span>
               </div>
             </div>

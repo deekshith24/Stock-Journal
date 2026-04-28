@@ -35,4 +35,14 @@ export interface Settings {
   usd_to_inr: number;
 }
 
+export interface StockPrice {
+  symbol: string;
+  exchange: string;
+  currentPrice: number;
+  previousClose: number;
+  dayHigh: number;
+  dayLow: number;
+  timestamp: number;
+}
+
 export type TradeFormData = Omit<Trade, 'id' | 'created_at' | 'status' | 'days_in_trade' | 'invested' | 'pf_percentage' | 'pl' | 'pl_percentage'>;

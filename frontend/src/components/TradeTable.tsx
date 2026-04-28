@@ -3,7 +3,9 @@ import { Trade } from '../types';
 interface Props {
   trades: Trade[];
   currency: 'INR' | 'USD';
+  exchange: 'US' | 'IN';
   exchangeRate?: number;
+  dateRates?: Record<string, number>;
   onEdit: (trade: Trade) => void;
   onDelete: (trade: Trade) => void;
   onClose: (trade: Trade) => void;
@@ -32,7 +34,7 @@ function plClass(pl: number | undefined): string {
   return pl > 0 ? 'pl-positive' : 'pl-negative';
 }
 
-export default function TradeTable({ trades, currency, exchangeRate, onEdit, onDelete, onClose }: Props) {
+export default function TradeTable({ trades, currency, exchange, exchangeRate, dateRates, onEdit, onDelete, onClose }: Props) {
   const sym = currency === 'INR' ? '₹' : '$';
   const locale = currency === 'INR' ? 'en-IN' : 'en-US';
   const rate = exchangeRate ?? 1;
@@ -76,10 +78,12 @@ export default function TradeTable({ trades, currency, exchangeRate, onEdit, onD
           </thead>
           <tbody>
             {trades.map((t, idx) => {
-              const entryPrice = t.entry_price * rate;
-              const exitPrice  = t.exit_price != null ? t.exit_price * rate : null;
-              const invested   = t.invested != null ? t.invested * rate : undefined;
-              const pl         = t.pl != null ? t.pl * rate : undefined;
+              // Only apply exchange rate for US trades when displaying in INR
+              const rateForTrade = currency === 'INR' && exchange === 'US' ? (dateRates?.[t.entry_date] ?? exchangeRate ?? 1) : 1;
+              const entryPrice = t.entry_price * rateForTrade;
+              const exitPrice  = t.exit_price != null ? t.exit_price * rateForTrade : null;
+              const invested   = t.invested != null ? t.invested * rateForTrade : undefined;
+              const pl         = t.pl != null ? t.pl * rateForTrade : undefined;
 
               return (
                 <tr key={t.id} className={rowClass(t)}>

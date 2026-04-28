@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Trade, Settings, ExitRecord } from './types';
+import { Trade, Settings, ExitRecord, StockPrice } from './types';
 import { api } from './api';
 import { exportToExcel } from './utils/exportExcel';
 import TradeTable from './components/TradeTable';
@@ -10,7 +10,7 @@ import ClosePositionModal from './components/ClosePositionModal';
 import AnalyticsPage from './components/AnalyticsPage';
 
 type FilterType = 'all' | 'open' | 'closed';
-type PageType = 'india' | 'us' | 'analytics';
+type PageType = 'india' | 'us' | 'longterm-bets' | 'analytics';
 type UsCurrency = 'USD' | 'INR';
 type PeriodFilter = '1M' | '3M' | '6M' | '1Y' | 'ALL' | 'CUSTOM';
 
@@ -22,6 +22,29 @@ const PERIOD_OPTIONS: { label: string; value: PeriodFilter; days: number }[] = [
   { label: 'All',    value: 'ALL',    days: 0   },
   { label: 'Custom', value: 'CUSTOM', days: 0   },
 ];
+
+const USD_INR_RATE_CACHE_KEY = 'usdToInrRateCache';
+
+function loadUsdToInrRateCache(): Record<string, number> {
+  if (typeof window === 'undefined') return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(USD_INR_RATE_CACHE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function saveUsdToInrRateCache(rates: Record<string, number>) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(USD_INR_RATE_CACHE_KEY, JSON.stringify(rates));
+}
+
+function getLatestUsdToInrInfo(rates: Record<string, number>) {
+  const dates = Object.keys(rates).sort();
+  if (!dates.length) return { rate: undefined as number | undefined, date: undefined as string | undefined };
+  const lastDate = dates[dates.length - 1];
+  return { rate: rates[lastDate], date: lastDate };
+}
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('india');
@@ -44,21 +67,27 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<Trade | null>(null);
   const [closingTrade, setClosingTrade] = useState<Trade | null>(null);
+  const [dateRates, setDateRates] = useState<Record<string, number>>(() => loadUsdToInrRateCache());
+  const [lastUsdToInrRate, setLastUsdToInrRate] = useState<number | undefined>(() => getLatestUsdToInrInfo(loadUsdToInrRateCache()).rate);
+  const [lastUsdToInrRateDate, setLastUsdToInrRateDate] = useState<string | undefined>(() => getLatestUsdToInrInfo(loadUsdToInrRateCache()).date);
+  const [stockPrices, setStockPrices] = useState<Record<string, StockPrice>>({});
 
   const isUS = currentPage === 'us';
+  const isLongTermBets = currentPage === 'longterm-bets';
   const isAnalytics = currentPage === 'analytics';
-  const trades = isUS ? usTrades : indiaTrades;
-  const setTrades = isUS ? setUsTrades : setIndiaTrades;
+  const trades = isLongTermBets ? [...indiaTrades, ...usTrades] : (isUS ? usTrades : indiaTrades);
+  const setTrades = isLongTermBets ? () => {} : (isUS ? setUsTrades : setIndiaTrades);
 
   // Currency display logic
-  const displayCurrency = isUS ? usCurrency : 'INR';
-  const exchangeRate = (isUS && usCurrency === 'INR' && settings.usd_to_inr > 0)
-    ? settings.usd_to_inr
-    : undefined;
+  const hasUsdToInrRate = Boolean(lastUsdToInrRate);
+  const displayCurrency = (isUS || isLongTermBets) && usCurrency === 'INR' && hasUsdToInrRate ? 'INR' : (isUS || isLongTermBets) ? 'USD' : 'INR';
+  const exchangeRate = (isUS || isLongTermBets) && displayCurrency === 'INR' ? lastUsdToInrRate : undefined;
   const sym = displayCurrency === 'INR' ? '₹' : '$';
   const locale = displayCurrency === 'INR' ? 'en-IN' : 'en-US';
-  const portfolioSize = isUS
-    ? (usCurrency === 'INR' ? settings.us_portfolio_size * (settings.usd_to_inr || 1) : settings.us_portfolio_size)
+  const portfolioSize = (isUS || isLongTermBets)
+    ? displayCurrency === 'INR'
+      ? (settings.us_portfolio_size + settings.portfolio_size) * (lastUsdToInrRate || 1)
+      : settings.us_portfolio_size + settings.portfolio_size
     : settings.portfolio_size;
 
   const loadData = useCallback(async () => {
@@ -72,6 +101,46 @@ export default function App() {
       setUsTrades(usData);
       setSettings(settingsData);
       setError(null);
+
+      const cachedRates = loadUsdToInrRateCache();
+      const todayDate = new Date().toISOString().slice(0, 10);
+      const tradeEntryDates = Array.from(new Set(usData.map(t => t.entry_date)));
+      const dates = Array.from(new Set([...tradeEntryDates, todayDate]));
+      const missingDates = dates.filter(date => !cachedRates[date]);
+      const fetchedEntries = await Promise.all(missingDates.map(async date => {
+        try {
+          const result = await api.getUsdToInrRate(date);
+          return [date, result.rate] as const;
+        } catch {
+          return null;
+        }
+      }));
+      const fetchedRates = Object.fromEntries(fetchedEntries.filter((entry): entry is readonly [string, number] => entry !== null));
+      const updatedRates = { ...cachedRates, ...fetchedRates };
+      setDateRates(updatedRates);
+      const latest = getLatestUsdToInrInfo(updatedRates);
+      setLastUsdToInrRate(latest.rate);
+      setLastUsdToInrRateDate(latest.date);
+      saveUsdToInrRateCache(updatedRates);
+
+      // Fetch stock prices for open positions
+      // Mark each trade with its source exchange
+      const indiaOpenPositions = indiaData.filter(t => t.status === 'Open' || t.status === 'Partial').map(t => ({ ...t, _exchange: 'IN' as const }));
+      const usOpenPositions = usData.filter(t => t.status === 'Open' || t.status === 'Partial').map(t => ({ ...t, _exchange: 'US' as const }));
+      const allOpenPositions = [...indiaOpenPositions, ...usOpenPositions];
+      const uniqueStocks = Array.from(new Set(allOpenPositions.map(t => `${t.stock}:${t._exchange}`)));
+      const stockPricePromises = uniqueStocks.map(async (stockKey) => {
+        const [symbol, exchange] = stockKey.split(':');
+        try {
+          const price = await api.getStockPrice(symbol, exchange);
+          return [stockKey, price] as const;
+        } catch {
+          return null;
+        }
+      });
+      const stockPriceResults = await Promise.all(stockPricePromises);
+      const newStockPrices = Object.fromEntries(stockPriceResults.filter((entry): entry is readonly [string, StockPrice] => entry !== null));
+      setStockPrices(newStockPrices);
     } catch (e) {
       setError('Failed to connect to server. Make sure the backend is running on port 3002.');
     } finally {
@@ -173,7 +242,7 @@ export default function App() {
   };
 
   const handleExport = () => {
-    exportToExcel(indiaTrades, usTrades, settings.usd_to_inr);
+    exportToExcel(indiaTrades, usTrades, lastUsdToInrRate ?? 0);
   };
 
   if (loading) return (
@@ -187,7 +256,7 @@ export default function App() {
       <header className="app-header">
         <div className="header-left">
           <h1>
-            {isAnalytics ? '📊 Stock Journal — Analytics' : isUS ? '🇺🇸 Stock Journal — US' : '🇮🇳 Stock Journal — India'}
+            {isAnalytics ? '📊 Stock Journal — Analytics' : isLongTermBets ? '🎯 Stock Journal — Long-term Bets' : isUS ? '🇺🇸 Stock Journal — US' : '🇮🇳 Stock Journal — India'}
           </h1>
           <div className="page-tabs">
             <button className={`page-tab ${currentPage === 'india' ? 'active' : ''}`} onClick={() => handlePageSwitch('india')}>
@@ -195,6 +264,9 @@ export default function App() {
             </button>
             <button className={`page-tab ${currentPage === 'us' ? 'active' : ''}`} onClick={() => handlePageSwitch('us')}>
               US
+            </button>
+            <button className={`page-tab ${currentPage === 'longterm-bets' ? 'active' : ''}`} onClick={() => handlePageSwitch('longterm-bets')}>
+              Long-term Bets
             </button>
             <button className={`page-tab ${currentPage === 'analytics' ? 'active' : ''}`} onClick={() => handlePageSwitch('analytics')}>
               Analytics
@@ -229,7 +301,7 @@ export default function App() {
           />
         ) : (
           <>
-            <SummaryCards trades={dateFilteredTrades} currency={displayCurrency} exchangeRate={exchangeRate} />
+            <SummaryCards trades={dateFilteredTrades} currency={displayCurrency} exchangeRate={exchangeRate} dateRates={dateRates} stockPrices={stockPrices} exchange={isLongTermBets ? 'BOTH' : (isUS ? 'US' : 'IN')} />
 
             <div className="toolbar">
               <div className="filter-tabs">
@@ -275,22 +347,29 @@ export default function App() {
               />
 
               {isUS && (
-                <div className="currency-toggle">
-                  <button
-                    className={`toggle-btn ${usCurrency === 'USD' ? 'active' : ''}`}
-                    onClick={() => setUsCurrency('USD')}
-                  >
-                    $ USD
-                  </button>
-                  <button
-                    className={`toggle-btn ${usCurrency === 'INR' ? 'active' : ''}`}
-                    onClick={() => setUsCurrency('INR')}
-                    disabled={!settings.usd_to_inr}
-                    title={!settings.usd_to_inr ? 'Set USD→INR rate in Settings first' : undefined}
-                  >
-                    ₹ INR
-                  </button>
-                </div>
+                <>
+                  <div className="currency-toggle">
+                    <button
+                      className={`toggle-btn ${usCurrency === 'USD' ? 'active' : ''}`}
+                      onClick={() => setUsCurrency('USD')}
+                    >
+                      $ USD
+                    </button>
+                    <button
+                      className={`toggle-btn ${usCurrency === 'INR' ? 'active' : ''}`}
+                      onClick={() => setUsCurrency('INR')}
+                      disabled={!lastUsdToInrRate}
+                      title={!lastUsdToInrRate ? 'USD→INR rate not available yet' : undefined}
+                    >
+                      ₹ INR
+                    </button>
+                  </div>
+                  <span style={{ color: '#6c757d', fontSize: 12, marginLeft: 12 }}>
+                    {lastUsdToInrRate
+                      ? `USD→INR: ₹${lastUsdToInrRate.toFixed(2)}${lastUsdToInrRateDate ? ` (${lastUsdToInrRateDate})` : ''}`
+                      : 'USD→INR rate unavailable'}
+                  </span>
+                </>
               )}
 
               <div className="spacer" />
@@ -302,7 +381,9 @@ export default function App() {
             <TradeTable
               trades={filteredTrades}
               currency={displayCurrency}
+              exchange={isLongTermBets ? 'BOTH' : (isUS ? 'US' : 'IN')}
               exchangeRate={exchangeRate}
+              dateRates={dateRates}
               onEdit={handleEdit}
               onClose={t => setClosingTrade(t)}
               onDelete={t => setDeleteConfirm(t)}
@@ -323,6 +404,8 @@ export default function App() {
       {showSettings && (
         <SettingsModal
           settings={settings}
+          currentUsdToInr={lastUsdToInrRate}
+          currentUsdToInrDate={lastUsdToInrRateDate}
           onSave={handleSaveSettings}
           onClose={() => setShowSettings(false)}
         />

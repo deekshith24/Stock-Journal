@@ -80,4 +80,25 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(settings),
     }).then(h<Settings>),
-};
+  getUsdToInrRate: (date: string): Promise<{ date: string; rate: number; fallback?: boolean }> =>
+    fetch(`${BASE}/usd-to-inr/${date}`).then(h<{ date: string; rate: number; fallback?: boolean }>),
+
+  // Stock prices
+  getStockPrice: (symbol: string, exchange: string): Promise<{
+    symbol: string;
+    exchange: string;
+    currentPrice: number;
+    previousClose: number;
+    dayHigh: number;
+    dayLow: number;
+    timestamp: number;
+  }> =>
+    fetch(`${BASE}/stock-price/${symbol}/${exchange}`).then(h<{
+      symbol: string;
+      exchange: string;
+      currentPrice: number;
+      previousClose: number;
+      dayHigh: number;
+      dayLow: number;
+      timestamp: number;
+    }>),};
