@@ -25,13 +25,13 @@ export default function ClosePositionModal({ trade, currency, onSave, onClose }:
   const remaining = trade.entry_quantity - alreadyExited;
 
   const [exitDate, setExitDate] = useState(today);
-  const [exitQty, setExitQty] = useState(remaining);
+  const [exitQty, setExitQty] = useState<number | ''>(remaining);
   const [exitPrice, setExitPrice] = useState<number | ''>('');
   const [reason, setReason] = useState('');
   const [emotions, setEmotions] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const thisPL = exitPrice !== '' ? (exitPrice - trade.entry_price) * exitQty : null;
+  const thisPL = exitPrice !== '' && exitQty !== '' ? (exitPrice - trade.entry_price) * exitQty : null;
   const prevPL = exits.length > 0
     ? exits.reduce((s, e) => s + (e.price - trade.entry_price) * e.quantity, 0)
     : (trade.exit_price != null ? (trade.exit_price - trade.entry_price) * alreadyExited : 0);
@@ -44,15 +44,15 @@ export default function ClosePositionModal({ trade, currency, onSave, onClose }:
     if (exitPrice === '') return;
     setSaving(true);
     try {
-      await onSave({ date: exitDate, quantity: exitQty, price: exitPrice, reason, emotions });
+      await onSave({ date: exitDate, quantity: exitQty as number, price: exitPrice, reason, emotions });
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" style={{ maxWidth: 560 }} onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="modal" style={{ maxWidth: 560 }} onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Close Position — {trade.stock}</h2>
           <button className="modal-close" onClick={onClose}>×</button>
@@ -120,14 +120,20 @@ export default function ClosePositionModal({ trade, currency, onSave, onClose }:
                   <label>Quantity (max {remaining})</label>
                   <input
                     type="number"
-                    min="1"
+                    min={currency === 'USD' ? '0.000001' : '1'}
+                    step={currency === 'USD' ? '0.000001' : '1'}
                     max={remaining}
                     value={exitQty}
-                    onChange={e => setExitQty(Math.min(parseInt(e.target.value) || 1, remaining))}
+                    onChange={e => {
+                      const v = e.target.value;
+                      if (v === '') { setExitQty(''); return; }
+                      const n = parseFloat(v);
+                      if (!isNaN(n)) setExitQty(Math.min(n, remaining));
+                    }}
                   />
-                  {exitQty < remaining && (
+                  {exitQty !== '' && exitQty < remaining && (
                     <span style={{ fontSize: 11, color: '#f59e0b', marginTop: 3 }}>
-                      {remaining - exitQty} shares remain after this exit (Partial)
+                      {remaining - (exitQty as number)} shares remain after this exit (Partial)
                     </span>
                   )}
                 </div>
@@ -198,8 +204,8 @@ export default function ClosePositionModal({ trade, currency, onSave, onClose }:
 
           <div className="modal-footer">
             <button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button>
-            <button type="submit" className="btn btn-primary" disabled={saving || exitPrice === '' || remaining <= 0}>
-              {saving ? 'Saving…' : exitQty < remaining ? 'Save Partial Exit' : 'Close Position'}
+            <button type="submit" className="btn btn-primary" disabled={saving || exitPrice === '' || exitQty === '' || remaining <= 0}>
+              {saving ? 'Saving…' : exitQty !== '' && exitQty < remaining ? 'Save Partial Exit' : 'Close Position'}
             </button>
           </div>
         </form>

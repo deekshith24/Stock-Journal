@@ -10,7 +10,8 @@ import ClosePositionModal from './components/ClosePositionModal';
 import AnalyticsPage from './components/AnalyticsPage';
 
 type FilterType = 'all' | 'open' | 'closed';
-type PageType = 'india' | 'us' | 'longterm-bets' | 'analytics';
+type PageType = 'india' | 'us' | 'analytics';
+type TradeTypeTab = 'swing' | 'positional';
 type UsCurrency = 'USD' | 'INR';
 type PeriodFilter = '1M' | '3M' | '6M' | '1Y' | 'ALL' | 'CUSTOM';
 
@@ -23,7 +24,18 @@ const PERIOD_OPTIONS: { label: string; value: PeriodFilter; days: number }[] = [
   { label: 'Custom', value: 'CUSTOM', days: 0   },
 ];
 
-const USD_INR_RATE_CACHE_KEY = 'usdToInrRateCache';
+const USD_INR_RATE_CACHE_KEY  = 'usdToInrRateCache';
+const STOCK_PRICE_CACHE_KEY   = 'stockPriceCache';
+const STOCK_PRICE_CACHE_VERSION = '2';  // bump to bust stale FMP-era cache
+
+// Bust old cache if it was built with a different version
+(function bustOldCache() {
+  const v = window.localStorage.getItem('stockPriceCacheVersion');
+  if (v !== STOCK_PRICE_CACHE_VERSION) {
+    window.localStorage.removeItem(STOCK_PRICE_CACHE_KEY);
+    window.localStorage.setItem('stockPriceCacheVersion', STOCK_PRICE_CACHE_VERSION);
+  }
+})();
 
 function loadUsdToInrRateCache(): Record<string, number> {
   if (typeof window === 'undefined') return {};
@@ -46,8 +58,44 @@ function getLatestUsdToInrInfo(rates: Record<string, number>) {
   return { rate: rates[lastDate], date: lastDate };
 }
 
+// Stock price cache — keyed by "SYMBOL:EXCHANGE"
+// Each entry stores { price, fetchedAt (ISO string) }
+interface CachedPrice { price: StockPrice; fetchedAt: string; }
+
+function loadStockPriceCache(): Record<string, CachedPrice> {
+  try { return JSON.parse(window.localStorage.getItem(STOCK_PRICE_CACHE_KEY) || '{}'); } catch { return {}; }
+}
+
+function saveStockPriceCache(cache: Record<string, CachedPrice>) {
+  window.localStorage.setItem(STOCK_PRICE_CACHE_KEY, JSON.stringify(cache));
+}
+
+// Returns true when a cached price entry needs a fresh fetch.
+// Prices refresh after each market's daily close:
+//   India (NSE): 10:00 UTC = 15:30 IST
+//   US (NYSE/NASDAQ): 21:00 UTC = 16:00 ET
+function isPriceStale(entry: CachedPrice, exchange: string): boolean {
+  const fetchedAt = new Date(entry.fetchedAt);
+  const now       = new Date();
+  const todayStr  = now.toISOString().slice(0, 10);
+  const closeUTC  = exchange === 'US' ? 21 : 10; // hour in UTC
+
+  // Build today's close time in UTC
+  const todayClose = new Date(`${todayStr}T${String(closeUTC).padStart(2, '0')}:00:00Z`);
+
+  if (now < todayClose) {
+    // Market not yet closed today — use yesterday's close data; stale if fetched before yesterday's close
+    const yesterday = new Date(todayClose);
+    yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+    return fetchedAt < yesterday;
+  }
+  // Market closed today — stale if not fetched after today's close
+  return fetchedAt < todayClose;
+}
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('india');
+  const [tradeTypeTab, setTradeTypeTab] = useState<TradeTypeTab>('swing');
   const [usCurrency, setUsCurrency] = useState<UsCurrency>('USD');
 
   const [indiaTrades, setIndiaTrades] = useState<Trade[]>([]);
@@ -71,23 +119,27 @@ export default function App() {
   const [lastUsdToInrRate, setLastUsdToInrRate] = useState<number | undefined>(() => getLatestUsdToInrInfo(loadUsdToInrRateCache()).rate);
   const [lastUsdToInrRateDate, setLastUsdToInrRateDate] = useState<string | undefined>(() => getLatestUsdToInrInfo(loadUsdToInrRateCache()).date);
   const [stockPrices, setStockPrices] = useState<Record<string, StockPrice>>({});
+  const [lastPriceFetchedAt, setLastPriceFetchedAt] = useState<Date | null>(() => {
+    const cache = loadStockPriceCache();
+    const times = Object.values(cache).map(e => new Date(e.fetchedAt).getTime());
+    return times.length ? new Date(Math.max(...times)) : null;
+  });
 
   const isUS = currentPage === 'us';
-  const isLongTermBets = currentPage === 'longterm-bets';
   const isAnalytics = currentPage === 'analytics';
-  const trades = isLongTermBets ? [...indiaTrades, ...usTrades] : (isUS ? usTrades : indiaTrades);
-  const setTrades = isLongTermBets ? () => {} : (isUS ? setUsTrades : setIndiaTrades);
+  const trades = isUS ? usTrades : indiaTrades;
+  const setTrades = isUS ? setUsTrades : setIndiaTrades;
 
   // Currency display logic
   const hasUsdToInrRate = Boolean(lastUsdToInrRate);
-  const displayCurrency = (isUS || isLongTermBets) && usCurrency === 'INR' && hasUsdToInrRate ? 'INR' : (isUS || isLongTermBets) ? 'USD' : 'INR';
-  const exchangeRate = (isUS || isLongTermBets) && displayCurrency === 'INR' ? lastUsdToInrRate : undefined;
+  const displayCurrency = isUS && usCurrency === 'INR' && hasUsdToInrRate ? 'INR' : isUS ? 'USD' : 'INR';
+  const exchangeRate = isUS && displayCurrency === 'INR' ? lastUsdToInrRate : undefined;
   const sym = displayCurrency === 'INR' ? '₹' : '$';
   const locale = displayCurrency === 'INR' ? 'en-IN' : 'en-US';
-  const portfolioSize = (isUS || isLongTermBets)
+  const portfolioSize = isUS
     ? displayCurrency === 'INR'
-      ? (settings.us_portfolio_size + settings.portfolio_size) * (lastUsdToInrRate || 1)
-      : settings.us_portfolio_size + settings.portfolio_size
+      ? settings.us_portfolio_size * (lastUsdToInrRate || 1)
+      : settings.us_portfolio_size
     : settings.portfolio_size;
 
   const loadData = useCallback(async () => {
@@ -123,24 +175,36 @@ export default function App() {
       setLastUsdToInrRateDate(latest.date);
       saveUsdToInrRateCache(updatedRates);
 
-      // Fetch stock prices for open positions
-      // Mark each trade with its source exchange
+      // Fetch stock prices for open/partial positions — with daily market-close cache
       const indiaOpenPositions = indiaData.filter(t => t.status === 'Open' || t.status === 'Partial').map(t => ({ ...t, _exchange: 'IN' as const }));
       const usOpenPositions = usData.filter(t => t.status === 'Open' || t.status === 'Partial').map(t => ({ ...t, _exchange: 'US' as const }));
       const allOpenPositions = [...indiaOpenPositions, ...usOpenPositions];
       const uniqueStocks = Array.from(new Set(allOpenPositions.map(t => `${t.stock}:${t._exchange}`)));
+
+      const priceCache = loadStockPriceCache();
       const stockPricePromises = uniqueStocks.map(async (stockKey) => {
         const [symbol, exchange] = stockKey.split(':');
+        const cached = priceCache[stockKey];
+        // Use cache if price is still fresh for this exchange's market close
+        if (cached && !isPriceStale(cached, exchange)) {
+          return [stockKey, cached.price] as const;
+        }
         try {
           const price = await api.getStockPrice(symbol, exchange);
+          priceCache[stockKey] = { price, fetchedAt: new Date().toISOString() };
           return [stockKey, price] as const;
         } catch {
+          // Fall back to stale cache if available
+          if (cached) return [stockKey, cached.price] as const;
           return null;
         }
       });
       const stockPriceResults = await Promise.all(stockPricePromises);
       const newStockPrices = Object.fromEntries(stockPriceResults.filter((entry): entry is readonly [string, StockPrice] => entry !== null));
+      saveStockPriceCache(priceCache);
       setStockPrices(newStockPrices);
+      const fetchTimes = Object.values(priceCache).map(e => new Date(e.fetchedAt).getTime());
+      if (fetchTimes.length) setLastPriceFetchedAt(new Date(Math.max(...fetchTimes)));
     } catch (e) {
       setError('Failed to connect to server. Make sure the backend is running on port 3002.');
     } finally {
@@ -152,6 +216,7 @@ export default function App() {
 
   const handlePageSwitch = (page: PageType) => {
     setCurrentPage(page);
+    setTradeTypeTab('swing');
     setFilter('all');
     setSearch('');
     setPeriod('ALL');
@@ -169,10 +234,18 @@ export default function App() {
   })();
   const toDate = period === 'CUSTOM' ? dateTo : '';
 
-  const dateFilteredTrades = trades.filter(t =>
+  const dateFilter = (t: Trade) =>
     (!fromDate || t.entry_date >= fromDate) &&
-    (!toDate   || t.entry_date <= toDate)
-  );
+    (!toDate   || t.entry_date <= toDate);
+
+  const isSwing      = (t: Trade) => t.trade_type === 'swing' || !t.trade_type;
+  const isPositional = (t: Trade) => t.trade_type === 'positional';
+
+  const allDateFilteredTrades        = trades.filter(dateFilter);
+  const swingDateFilteredTrades      = trades.filter(t => dateFilter(t) && isSwing(t));
+  const positionalDateFilteredTrades = trades.filter(t => dateFilter(t) && isPositional(t));
+
+  const dateFilteredTrades = tradeTypeTab === 'swing' ? swingDateFilteredTrades : positionalDateFilteredTrades;
 
   const filteredTrades = dateFilteredTrades.filter(t => {
     const matchesFilter =
@@ -181,21 +254,26 @@ export default function App() {
       (filter === 'closed' && t.status === 'Closed');
     const matchesSearch = !search || t.stock.toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
+  }).sort((a, b) => {
+    const d = new Date(b.entry_date).getTime() - new Date(a.entry_date).getTime();
+    return d !== 0 ? d : (b.id ?? 0) - (a.id ?? 0);
   });
 
-  const handleSave = async (data: { stock: string; entry_date: string; entry_quantity: number; entry_price: number; reason_for_entry: string }) => {
+  const handleSave = async (data: { stock: string; trade_type: 'swing' | 'positional'; entry_date: string; entry_quantity: number; entry_price: number; reason_for_entry: string }, exits?: ExitRecord[]) => {
     try {
       if (editingTrade?.id) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const updated = isUS ? await api.updateUsTrade(editingTrade.id, data as any) : await api.updateTrade(editingTrade.id, data as any);
-        setTrades(prev => prev.map(t => t.id === updated.id ? updated : t));
+        await (isUS ? api.updateUsTrade(editingTrade.id, data as any) : api.updateTrade(editingTrade.id, data as any));
+        if (exits !== undefined) {
+          await (isUS ? api.updateUsExits(editingTrade.id, exits) : api.updateExits(editingTrade.id, exits));
+        }
       } else {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const created = isUS ? await api.createUsTrade(data as any) : await api.createTrade(data as any);
-        setTrades(prev => [created, ...prev]);
+        await (isUS ? api.createUsTrade(data as any) : api.createTrade(data as any));
       }
       setShowForm(false);
       setEditingTrade(null);
+      loadData();
     } catch (e: unknown) {
       alert((e as Error).message || 'Save failed');
     }
@@ -214,8 +292,8 @@ export default function App() {
       } else {
         await api.deleteTrade(deleteConfirm.id);
       }
-      setTrades(prev => prev.filter(t => t.id !== deleteConfirm.id));
       setDeleteConfirm(null);
+      loadData();
     } catch (e: unknown) {
       alert((e as Error).message || 'Delete failed');
     }
@@ -231,11 +309,9 @@ export default function App() {
   const handleClosePosition = async (exit: ExitRecord) => {
     if (!closingTrade?.id) return;
     try {
-      const updated = isUS
-        ? await api.addUsExit(closingTrade.id, exit)
-        : await api.addExit(closingTrade.id, exit);
-      setTrades(prev => prev.map(t => t.id === updated.id ? updated : t));
+      await (isUS ? api.addUsExit(closingTrade.id, exit) : api.addExit(closingTrade.id, exit));
       setClosingTrade(null);
+      loadData();
     } catch (e: unknown) {
       alert((e as Error).message || 'Close failed');
     }
@@ -244,6 +320,24 @@ export default function App() {
   const handleExport = () => {
     exportToExcel(indiaTrades, usTrades, lastUsdToInrRate ?? 0);
   };
+
+  const handleRefreshPrices = () => {
+    window.localStorage.removeItem(STOCK_PRICE_CACHE_KEY);
+    loadData();
+  };
+
+  // Auto-refresh prices after each market's daily close
+  useEffect(() => {
+    const id = setInterval(() => {
+      const priceCache = loadStockPriceCache();
+      const hasStale = Object.entries(priceCache).some(([key, entry]) => {
+        const exchange = key.split(':')[1];
+        return isPriceStale(entry, exchange);
+      });
+      if (hasStale) loadData();
+    }, 60_000);
+    return () => clearInterval(id);
+  }, [loadData]);
 
   if (loading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#6c757d' }}>
@@ -256,7 +350,7 @@ export default function App() {
       <header className="app-header">
         <div className="header-left">
           <h1>
-            {isAnalytics ? '📊 Stock Journal — Analytics' : isLongTermBets ? '🎯 Stock Journal — Long-term Bets' : isUS ? '🇺🇸 Stock Journal — US' : '🇮🇳 Stock Journal — India'}
+            {isAnalytics ? '📊 Stock Journal — Analytics' : isUS ? '🇺🇸 Stock Journal — US' : '🇮🇳 Stock Journal — India'}
           </h1>
           <div className="page-tabs">
             <button className={`page-tab ${currentPage === 'india' ? 'active' : ''}`} onClick={() => handlePageSwitch('india')}>
@@ -264,9 +358,6 @@ export default function App() {
             </button>
             <button className={`page-tab ${currentPage === 'us' ? 'active' : ''}`} onClick={() => handlePageSwitch('us')}>
               US
-            </button>
-            <button className={`page-tab ${currentPage === 'longterm-bets' ? 'active' : ''}`} onClick={() => handlePageSwitch('longterm-bets')}>
-              Long-term Bets
             </button>
             <button className={`page-tab ${currentPage === 'analytics' ? 'active' : ''}`} onClick={() => handlePageSwitch('analytics')}>
               Analytics
@@ -278,11 +369,6 @@ export default function App() {
             ↓ Export
           </button>
           <button className="btn btn-ghost" onClick={() => setShowSettings(true)}>⚙ Settings</button>
-          {!isAnalytics && (
-            <button className="btn btn-primary" onClick={() => { setEditingTrade(null); setShowForm(true); }}>
-              + Add Trade
-            </button>
-          )}
         </div>
       </header>
 
@@ -301,7 +387,56 @@ export default function App() {
           />
         ) : (
           <>
-            <SummaryCards trades={dateFilteredTrades} currency={displayCurrency} exchangeRate={exchangeRate} dateRates={dateRates} stockPrices={stockPrices} exchange={isLongTermBets ? 'BOTH' : (isUS ? 'US' : 'IN')} />
+            {/* Overall summary */}
+            <SummaryCards
+              trades={allDateFilteredTrades}
+              currency={displayCurrency}
+              exchangeRate={exchangeRate}
+              dateRates={dateRates}
+              stockPrices={stockPrices}
+              exchange={isUS ? 'US' : 'IN'}
+              title="Overall"
+            />
+
+            {/* Individual compact summary for active tab */}
+            <SummaryCards
+              trades={dateFilteredTrades}
+              currency={displayCurrency}
+              exchangeRate={exchangeRate}
+              dateRates={dateRates}
+              stockPrices={stockPrices}
+              exchange={isUS ? 'US' : 'IN'}
+              title={tradeTypeTab === 'swing' ? 'Swing Trade' : 'Positional Trade'}
+              compact
+            />
+
+            <div className="sub-tabs">
+              <button
+                className={`sub-tab ${tradeTypeTab === 'swing' ? 'active' : ''}`}
+                onClick={() => { setTradeTypeTab('swing'); setFilter('all'); setSearch(''); setPeriod('ALL'); setDateFrom(''); setDateTo(''); }}
+              >
+                Swing Trade
+              </button>
+              <button
+                className={`sub-tab ${tradeTypeTab === 'positional' ? 'active' : ''}`}
+                onClick={() => { setTradeTypeTab('positional'); setFilter('all'); setSearch(''); setPeriod('ALL'); setDateFrom(''); setDateTo(''); }}
+              >
+                Positional Trade
+              </button>
+              <div className="sub-tabs-spacer" />
+              <button className="btn btn-primary btn-sm" onClick={() => { setEditingTrade(null); setShowForm(true); }}>
+                + Add Trade
+              </button>
+            </div>
+
+            <div className="price-bar">
+              <span className="price-bar-label">
+                {lastPriceFetchedAt
+                  ? `Prices as of ${lastPriceFetchedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · ${lastPriceFetchedAt.toLocaleDateString([], { day: '2-digit', month: 'short', year: 'numeric' })}`
+                  : 'Prices not yet loaded'}
+              </span>
+              <button className="btn btn-ghost btn-sm" onClick={handleRefreshPrices}>↺ Refresh</button>
+            </div>
 
             <div className="toolbar">
               <div className="filter-tabs">
@@ -381,9 +516,10 @@ export default function App() {
             <TradeTable
               trades={filteredTrades}
               currency={displayCurrency}
-              exchange={isLongTermBets ? 'BOTH' : (isUS ? 'US' : 'IN')}
+              exchange={isUS ? 'US' : 'IN'}
               exchangeRate={exchangeRate}
               dateRates={dateRates}
+              stockPrices={stockPrices}
               onEdit={handleEdit}
               onClose={t => setClosingTrade(t)}
               onDelete={t => setDeleteConfirm(t)}
@@ -395,6 +531,7 @@ export default function App() {
       {showForm && (
         <TradeForm
           trade={editingTrade}
+          defaultTradeType={editingTrade?.trade_type ?? tradeTypeTab}
           currency={isUS ? 'USD' : 'INR'}
           onSave={handleSave}
           onClose={() => { setShowForm(false); setEditingTrade(null); }}

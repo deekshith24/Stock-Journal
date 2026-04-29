@@ -608,7 +608,16 @@
     "exit_price": null,
     "reason_for_entry": "Base BO",
     "reason_for_exit": "",
-    "emotions": ""
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-04-28",
+        "quantity": 47,
+        "price": 440.2,
+        "reason": "2 red candle in 2 days. Looked like profit booking. Reduce the number of positions as currently having too many postions",
+        "emotions": "Fear of lossing gain and carrying too many positions"
+      }
+    ]
   },
   {
     "id": 48,
@@ -651,7 +660,7 @@
   },
   {
     "id": 51,
-    "stock": "AVANTIFEEDS",
+    "stock": "AVANTIFEED",
     "entry_date": "2026-04-17",
     "exit_date": null,
     "entry_quantity": 25,
@@ -660,7 +669,8 @@
     "exit_price": null,
     "reason_for_entry": "Base BO",
     "reason_for_exit": "",
-    "emotions": ""
+    "emotions": "",
+    "trade_type": "swing"
   },
   {
     "id": 52,
@@ -706,7 +716,7 @@
   },
   {
     "id": 54,
-    "stock": "ATHERENERGY",
+    "stock": "ATHERENERG",
     "entry_date": "2026-04-22",
     "exit_date": null,
     "entry_quantity": 33,
@@ -715,7 +725,8 @@
     "exit_price": null,
     "reason_for_entry": "Base BO",
     "reason_for_exit": "",
-    "emotions": ""
+    "emotions": "",
+    "trade_type": "swing"
   },
   {
     "id": 55,
@@ -785,5 +796,85 @@
     "exits": [],
     "id": 59,
     "created_at": "2026-04-27T09:21:00.745Z"
+  },
+  {
+    "stock": "SAILIFE",
+    "trade_type": "positional",
+    "entry_date": "2026-03-02",
+    "entry_quantity": 30,
+    "entry_price": 1001.7,
+    "reason_for_entry": "220DMA Buy Signal",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 60,
+    "created_at": "2026-04-28T13:22:54.624Z"
+  },
+  {
+    "stock": "APARINDS",
+    "trade_type": "positional",
+    "entry_date": "2026-03-06",
+    "entry_quantity": 3,
+    "entry_price": 10542,
+    "reason_for_entry": "Near 220DMA Buy Signal.\nChart looks good with gap up and retest in gap area",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-04-28",
+        "quantity": 2,
+        "price": 11258.5,
+        "reason": "Partial profit book",
+        "emotions": ""
+      }
+    ],
+    "id": 61,
+    "created_at": "2026-04-28T13:23:48.541Z"
+  },
+  {
+    "stock": "AMBER",
+    "trade_type": "positional",
+    "entry_date": "2026-03-06",
+    "entry_quantity": 6,
+    "entry_price": 7836,
+    "reason_for_entry": "Near 220DMA Buy Signal.\nChart looks good with gap up and retest in gap area",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-04-28",
+        "quantity": 6,
+        "price": 6662.16,
+        "reason": "",
+        "emotions": ""
+      }
+    ],
+    "id": 62,
+    "created_at": "2026-04-28T13:24:26.922Z"
+  },
+  {
+    "stock": "ABSLAMC",
+    "trade_type": "positional",
+    "entry_date": "2026-03-16",
+    "entry_quantity": 32,
+    "entry_price": 957.36,
+    "reason_for_entry": "220DMA Buy Signal",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 63,
+    "created_at": "2026-04-28T13:24:53.337Z"
   }
 ]

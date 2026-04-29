@@ -70,6 +70,20 @@ export const api = {
       body: JSON.stringify(exit),
     }).then(h<Trade>),
 
+  updateExits: (id: number, exits: ExitRecord[]): Promise<Trade> =>
+    fetch(`${BASE}/trades/${id}/exits`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ exits }),
+    }).then(h<Trade>),
+
+  updateUsExits: (id: number, exits: ExitRecord[]): Promise<Trade> =>
+    fetch(`${BASE}/us-trades/${id}/exits`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ exits }),
+    }).then(h<Trade>),
+
   // Settings
   getSettings: (): Promise<Settings> =>
     fetch(`${BASE}/settings`).then(h<Settings>),

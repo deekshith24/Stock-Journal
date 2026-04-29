@@ -9,9 +9,18 @@ import { Trade, ExitRecord } from './types';
 
 const router = Router();
 
-function fetchJson<T>(url: string): Promise<T> {
+function fetchJson<T>(url: string, headers: Record<string, string> = {}): Promise<T> {
   return new Promise((resolve, reject) => {
-    https.get(url, res => {
+    const opts = new URL(url);
+    const reqOptions = {
+      hostname: opts.hostname,
+      path: opts.pathname + opts.search,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; StockJournal/1.0)',
+        ...headers,
+      },
+    };
+    https.get(reqOptions, res => {
       let body = '';
       res.on('data', chunk => { body += chunk; });
       res.on('end', () => {
@@ -101,6 +110,7 @@ function enrichAll(trades: Trade[], portfolioSize: number) {
 function buildEntryPayload(body: Trade, existing: Trade) {
   return {
     stock: body.stock ? body.stock.toUpperCase().trim() : existing.stock,
+    trade_type: body.trade_type ?? existing.trade_type,
     entry_date: body.entry_date || existing.entry_date,
     entry_quantity: body.entry_quantity ? Number(body.entry_quantity) : existing.entry_quantity,
     entry_price: body.entry_price ? Number(body.entry_price) : existing.entry_price,
@@ -136,6 +146,7 @@ router.post('/trades', (req: Request, res: Response) => {
   }
   const trade = createTrade({
     stock: body.stock.toUpperCase().trim(),
+    trade_type: body.trade_type || 'swing',
     entry_date: body.entry_date,
     entry_quantity: Number(body.entry_quantity),
     entry_price: Number(body.entry_price),
@@ -180,6 +191,10 @@ router.post('/trades/:id/exits', (req: Request, res: Response) => {
     emotions: req.body.emotions || '',
   };
 
+  if (!newExit.quantity || newExit.quantity <= 0) {
+    return res.status(400).json({ error: 'Exit quantity must be greater than 0' });
+  }
+
   // Auto-migrate legacy scalar fields to exits array on first new close
   let exits: ExitRecord[] = trade.exits ? [...trade.exits] : [];
   if (exits.length === 0 && trade.exit_quantity && trade.exit_price) {
@@ -191,6 +206,13 @@ router.post('/trades/:id/exits', (req: Request, res: Response) => {
       emotions: trade.emotions || '',
     }];
   }
+
+  const alreadyExited = exits.reduce((s, e) => s + e.quantity, 0);
+  const remaining = Math.round((trade.entry_quantity - alreadyExited) * 1e8) / 1e8;
+  if (newExit.quantity > remaining + 1e-8) {
+    return res.status(400).json({ error: `Cannot exit ${newExit.quantity} shares — only ${remaining} remaining` });
+  }
+
   exits.push(newExit);
 
   const updated = updateTrade(id, { ...trade, exits });
@@ -220,6 +242,7 @@ router.post('/us-trades', (req: Request, res: Response) => {
   }
   const trade = createUsTrade({
     stock: body.stock.toUpperCase().trim(),
+    trade_type: body.trade_type || 'swing',
     entry_date: body.entry_date,
     entry_quantity: Number(body.entry_quantity),
     entry_price: Number(body.entry_price),
@@ -264,6 +287,10 @@ router.post('/us-trades/:id/exits', (req: Request, res: Response) => {
     emotions: req.body.emotions || '',
   };
 
+  if (!newExit.quantity || newExit.quantity <= 0) {
+    return res.status(400).json({ error: 'Exit quantity must be greater than 0' });
+  }
+
   let exits: ExitRecord[] = trade.exits ? [...trade.exits] : [];
   if (exits.length === 0 && trade.exit_quantity && trade.exit_price) {
     exits = [{
@@ -274,6 +301,13 @@ router.post('/us-trades/:id/exits', (req: Request, res: Response) => {
       emotions: trade.emotions || '',
     }];
   }
+
+  const alreadyExited = exits.reduce((s, e) => s + e.quantity, 0);
+  const remaining = Math.round((trade.entry_quantity - alreadyExited) * 1e8) / 1e8;
+  if (newExit.quantity > remaining + 1e-8) {
+    return res.status(400).json({ error: `Cannot exit ${newExit.quantity} shares — only ${remaining} remaining` });
+  }
+
   exits.push(newExit);
 
   const updated = updateUsTrade(id, { ...trade, exits });
@@ -282,8 +316,39 @@ router.post('/us-trades/:id/exits', (req: Request, res: Response) => {
   res.json(enrichTrade(updated, us_portfolio_size));
 });
 
-// ── Settings ──────────────────────────────────────────────────────────────────
+router.put('/trades/:id/exits', (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const trade = getTradeById(id);
+  if (!trade) return res.status(404).json({ error: 'Trade not found' });
+  const exits: ExitRecord[] = req.body.exits;
+  if (!Array.isArray(exits)) return res.status(400).json({ error: 'exits must be an array' });
+  const totalExited = exits.reduce((s, e) => s + Number(e.quantity), 0);
+  if (totalExited > trade.entry_quantity + 1e-8) {
+    return res.status(400).json({ error: `Total exit quantity ${totalExited} exceeds entry quantity ${trade.entry_quantity}` });
+  }
+  const updated = updateTrade(id, { ...trade, exits });
+  if (!updated) return res.status(404).json({ error: 'Trade not found' });
+  const { portfolio_size } = getSettings();
+  res.json(enrichTrade(updated, portfolio_size));
+});
 
+router.put('/us-trades/:id/exits', (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const trade = getUsTradeById(id);
+  if (!trade) return res.status(404).json({ error: 'Trade not found' });
+  const exits: ExitRecord[] = req.body.exits;
+  if (!Array.isArray(exits)) return res.status(400).json({ error: 'exits must be an array' });
+  const totalExited = exits.reduce((s, e) => s + Number(e.quantity), 0);
+  if (totalExited > trade.entry_quantity + 1e-8) {
+    return res.status(400).json({ error: `Total exit quantity ${totalExited} exceeds entry quantity ${trade.entry_quantity}` });
+  }
+  const updated = updateUsTrade(id, { ...trade, exits });
+  if (!updated) return res.status(404).json({ error: 'Trade not found' });
+  const { us_portfolio_size } = getSettings();
+  res.json(enrichTrade(updated, us_portfolio_size));
+});
+
+// ── Settings ──────────────────────────────────────────────────────────────────
 router.get('/settings', (_req: Request, res: Response) => {
   res.json(getSettings());
 });
@@ -322,6 +387,36 @@ router.get('/usd-to-inr/:date', async (req: Request, res: Response) => {
 
 // ── Stock Prices ──────────────────────────────────────────────────────────────────
 
+interface YahooChartMeta {
+  regularMarketPrice: number;
+  chartPreviousClose?: number;
+  regularMarketDayHigh?: number;
+  regularMarketDayLow?: number;
+  regularMarketTime?: number;
+}
+
+interface YahooChartResponse {
+  chart: {
+    result?: Array<{ meta: YahooChartMeta }>;
+    error?: { description: string };
+  };
+}
+
+async function fetchYahooPrice(ticker: string): Promise<{ currentPrice: number; previousClose: number; dayHigh: number; dayLow: number; timestamp: number }> {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}?interval=1d&range=1d`;
+  const data = await fetchJson<YahooChartResponse>(url);
+  const meta = data?.chart?.result?.[0]?.meta;
+  if (!meta?.regularMarketPrice) throw new Error(`No price data for ${ticker}`);
+  const p = meta.regularMarketPrice;
+  return {
+    currentPrice:  Math.round(p * 100) / 100,
+    previousClose: Math.round((meta.chartPreviousClose ?? p) * 100) / 100,
+    dayHigh:       Math.round((meta.regularMarketDayHigh ?? p) * 100) / 100,
+    dayLow:        Math.round((meta.regularMarketDayLow  ?? p) * 100) / 100,
+    timestamp:     meta.regularMarketTime ?? Math.floor(Date.now() / 1000),
+  };
+}
+
 router.get('/stock-price/:symbol/:exchange', async (req: Request, res: Response) => {
   const { symbol, exchange } = req.params;
 
@@ -329,119 +424,43 @@ router.get('/stock-price/:symbol/:exchange', async (req: Request, res: Response)
     return res.status(400).json({ error: 'Symbol and exchange required' });
   }
 
+  const ticker = exchange === 'IN' ? `${symbol.toUpperCase()}.NS` : symbol.toUpperCase();
+
   try {
-    let apiUrl: string;
+    const price = await fetchYahooPrice(ticker);
+    return res.json({ symbol: symbol.toUpperCase(), exchange, ...price });
+  } catch (primaryErr) {
+    console.error(`Yahoo Finance error for ${ticker}:`, primaryErr);
 
-    if (exchange === 'US') {
-      // Financial Modeling Prep API - free tier with 250 requests/day
-      apiUrl = `https://financialmodelingprep.com/api/v3/quote/${symbol}?apikey=demo`;
-    } else if (exchange === 'IN') {
-      // For Indian stocks, try NSE symbol format
-      const nseSymbol = `${symbol}.NS`;
-      apiUrl = `https://financialmodelingprep.com/api/v3/quote/${nseSymbol}?apikey=demo`;
-    } else {
-      throw new Error(`Unsupported exchange: ${exchange}`);
+    // For US stocks only: try BSE suffix as secondary attempt
+    if (exchange === 'IN') {
+      try {
+        const bseTicker = `${symbol.toUpperCase()}.BO`;
+        const price = await fetchYahooPrice(bseTicker);
+        return res.json({ symbol: symbol.toUpperCase(), exchange, ...price });
+      } catch {
+        // fall through to hardcoded
+      }
     }
 
-    const data = await fetchJson<Array<{
-      symbol: string;
-      price: number;
-      changesPercentage: number;
-      change: number;
-      dayLow: number;
-      dayHigh: number;
-      yearHigh: number;
-      yearLow: number;
-      marketCap: number;
-      priceAvg50: number;
-      priceAvg200: number;
-      volume: number;
-      avgVolume: number;
-      exchange: string;
-      open: number;
-      previousClose: number;
-      eps: number;
-      pe: number;
-      earningsAnnouncement: string;
-      sharesOutstanding: number;
-      timestamp: number;
-    }>>(apiUrl);
-
-    if (!data || data.length === 0 || !data[0].price || data[0].price === 0) {
-      throw new Error('Invalid price data from Financial Modeling Prep');
-    }
-
-    const quote = data[0];
-    const currentPrice = quote.price;
-    const previousClose = quote.previousClose || currentPrice;
-    const dayHigh = quote.dayHigh || currentPrice;
-    const dayLow = quote.dayLow || currentPrice;
-
-    if (isNaN(currentPrice) || currentPrice === 0) {
-      throw new Error('Invalid price value');
-    }
-
-    return res.json({
-      symbol: quote.symbol || symbol.toUpperCase(),
-      exchange,
-      currentPrice,
-      previousClose,
-      dayHigh,
-      dayLow,
-      timestamp: quote.timestamp || Date.now() / 1000
-    });
-  } catch (error) {
-    console.error('Stock price fetch error:', error);
-    // Enhanced fallback: use more realistic prices based on actual portfolio positions
-    // Updated 28-Apr-2026 to reflect current market prices for open positions
-    const basePrices: Record<string, number> = {
-      // Indian stocks - current market prices (NSE)
-      'NATIONALUM': 565.00, // Entry: 420, current profit position
-      'TATASTEEL': 165.80,
-      'RELIANCE': 2950.00,
-      'HDFCBANK': 1680.00,
-      'ICICIBANK': 1125.00,
-      'INFY': 1840.00,
-      'TCS': 4250.00,
-      'BAJFINANCE': 7150.00,
-      'MARUTI': 12800.00,
-      'ITC': 495.00,
-      // Current open positions with latest market prices
-      'KIRLOSENG': 1754.80, // Entry: 1668.5, up ~5.2%
-      'APOLLO': 334.50, // Entry: 297, up ~12.6%
-      'PARAS': 920.75, // Entry: 834, up ~10.4%
-      'IMFA': 1725.60, // Entry: 1566, up ~10.2%
-      'GLENMARK': 2549.85, // Entry: 2249.7, up ~13.3%
-      'ATHERENERGY': 1040.25, // Entry: 908, up ~14.5%
-      'TRUALT': 508.50, // Entry: 445.5, up ~14.1%
-      'AVANTIFEEDS': 1680.75, // Entry: 1487.5, up ~13.0%
-      'NLCINDIA': 355.80, // Entry: 300.4, up ~18.4%
-      'DATAPATTERN': 4328.75, // Entry: 3608, partial position
-      // US stocks - realistic NYSE/NASDAQ prices
-      'AAPL': 195.50,
-      'GOOGL': 142.80,
-      'MSFT': 415.00,
-      'AMZN': 185.00,
-      'TSLA': 248.50,
-      'NVDA': 875.00,
-      'META': 485.00,
-      'NFLX': 650.00,
-      'AMD': 165.00,
-      'INTC': 22.50
+    // Last-resort hardcoded fallback (only for known symbols — avoids wildly wrong values)
+    const knownPrices: Record<string, number> = {
+      'NATIONALUM': 420, 'NLCINDIA': 300, 'AVANTIFEEDS': 1487, 'TRUALT': 445,
+      'ATHERENERGY': 908, 'GLENMARK': 2403, 'IMFA': 1566, 'PARAS': 834,
+      'APOLLO': 297, 'KIRLOSENG': 1668, 'SAILIFE': 1001, 'ABSLAMC': 957,
+      'DATAPATTERN': 3608, 'APAR': 10542, 'AMBER': 7836,
+      'AAPL': 195, 'GOOGL': 142, 'MSFT': 415, 'AMZN': 185,
+      'TSLA': 248, 'NVDA': 875, 'META': 485, 'NFLX': 650,
     };
-
-    const basePrice = basePrices[symbol.toUpperCase()] || 150.00;
-    // Use base price directly without random volatility for consistency
-    const currentPrice = Math.round(basePrice * 100) / 100;
-
+    const fallback = knownPrices[symbol.toUpperCase()];
+    if (!fallback) {
+      return res.status(503).json({ error: `Price unavailable for ${symbol}` });
+    }
     return res.json({
-      symbol: symbol.toUpperCase(),
-      exchange,
-      currentPrice,
-      previousClose: Math.round(basePrice * 0.98 * 100) / 100,
-      dayHigh: Math.round(currentPrice * 1.02 * 100) / 100,
-      dayLow: Math.round(currentPrice * 0.98 * 100) / 100,
-      timestamp: Date.now() / 1000
+      symbol: symbol.toUpperCase(), exchange,
+      currentPrice: fallback, previousClose: fallback,
+      dayHigh: fallback, dayLow: fallback,
+      timestamp: Math.floor(Date.now() / 1000),
     });
   }
 });
