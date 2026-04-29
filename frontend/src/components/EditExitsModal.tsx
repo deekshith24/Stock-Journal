@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Trade, ExitRecord } from '../types';
+import { exitReasonOptions, emotionOptions } from '../constants';
 
 interface Props {
   trade: Trade;
@@ -99,11 +100,11 @@ export default function EditExitsModal({ trade, currency, onSave, onClose }: Pro
                         {pl >= 0 ? '+' : ''}{sym}{Math.abs(pl).toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
                       </td>
                       <td style={{ padding: '4px 6px' }}>
-                        <input value={ex.reason ?? ''} onChange={e => update(i, 'reason', e.target.value)}
+                        <input list="exit-reason-options" value={ex.reason ?? ''} onChange={e => update(i, 'reason', e.target.value)}
                           placeholder="Reason" style={{ ...inp, width: 140 }} />
                       </td>
                       <td style={{ padding: '4px 6px' }}>
-                        <input value={ex.emotions ?? ''} onChange={e => update(i, 'emotions', e.target.value)}
+                        <input list="exit-emotion-options" value={ex.emotions ?? ''} onChange={e => update(i, 'emotions', e.target.value)}
                           placeholder="Emotions" style={{ ...inp, width: 120 }} />
                       </td>
                     </tr>
@@ -129,6 +130,12 @@ export default function EditExitsModal({ trade, currency, onSave, onClose }: Pro
             </table>
 
             {error && <div style={{ marginTop: 10, color: '#dc2626', fontSize: 12 }}>{error}</div>}
+            <datalist id="exit-reason-options">
+              {exitReasonOptions.map(option => <option key={option} value={option} />)}
+            </datalist>
+            <datalist id="exit-emotion-options">
+              {emotionOptions.map(option => <option key={option} value={option} />)}
+            </datalist>
           </div>
 
           <div className="modal-footer">

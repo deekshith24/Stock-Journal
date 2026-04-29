@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Trade, ExitRecord } from '../types';
+import { entryReasonOptions, exitReasonOptions, emotionOptions } from '../constants';
 
 interface TradeEntryData {
   stock: string;
@@ -14,6 +15,9 @@ interface Props {
   trade: Trade | null;
   defaultTradeType: 'swing' | 'positional';
   currency: 'INR' | 'USD';
+  entryReasonSuggestions: string[];
+  exitReasonSuggestions: string[];
+  emotionSuggestions: string[];
   onSave: (data: TradeEntryData, exits?: ExitRecord[]) => Promise<void>;
   onClose: () => void;
 }
@@ -37,10 +41,11 @@ function initialExits(trade: Trade | null): ExitRecord[] | null {
   return null;
 }
 
-export default function TradeForm({ trade, defaultTradeType, currency, onSave, onClose }: Props) {
+export default function TradeForm({ trade, defaultTradeType, currency, entryReasonSuggestions, exitReasonSuggestions, emotionSuggestions, onSave, onClose }: Props) {
   const [form, setForm] = useState<TradeEntryData>({ ...EMPTY, trade_type: defaultTradeType, entry_date: getTodayDate() });
   const [exits, setExits] = useState<ExitRecord[] | null>(null);
   const [saving, setSaving] = useState(false);
+  const [entryReasonPreset, setEntryReasonPreset] = useState('');
 
   const sym    = currency === 'INR' ? '₹' : '$';
   const locale = currency === 'INR' ? 'en-IN' : 'en-US';
@@ -56,12 +61,19 @@ export default function TradeForm({ trade, defaultTradeType, currency, onSave, o
         entry_price: trade.entry_price,
         reason_for_entry: trade.reason_for_entry,
       });
+      const presetValue = entryReasonOptions.includes(trade.reason_for_entry)
+        ? trade.reason_for_entry
+        : entryReasonSuggestions.includes(trade.reason_for_entry)
+          ? trade.reason_for_entry
+          : '';
+      setEntryReasonPreset(presetValue);
       setExits(initialExits(trade));
     } else {
       setForm({ ...EMPTY, trade_type: defaultTradeType, entry_date: getTodayDate() });
+      setEntryReasonPreset('');
       setExits(null);
     }
-  }, [trade, defaultTradeType]);
+  }, [trade, defaultTradeType, entryReasonSuggestions]);
 
   const set = (field: keyof TradeEntryData, value: unknown) =>
     setForm(prev => ({ ...prev, [field]: value }));
@@ -132,7 +144,35 @@ export default function TradeForm({ trade, defaultTradeType, currency, onSave, o
               <div className="form-section-title">Notes</div>
               <div className="form-group">
                 <label>Reason for Entry</label>
-                <textarea rows={2} value={form.reason_for_entry} onChange={e => set('reason_for_entry', e.target.value)}
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginBottom: 8 }}>
+                  <select value={entryReasonPreset} onChange={e => {
+                    const value = e.target.value;
+                    setEntryReasonPreset(value);
+                    set('reason_for_entry', value);
+                  }} style={{ minWidth: 220, padding: '6px 8px', borderRadius: 4, border: '1px solid #cbd5e1' }}>
+                    <option value="">Choose preset reason</option>
+                    <optgroup label="Common reasons">
+                      {entryReasonOptions.map(reason => (
+                        <option key={reason} value={reason}>{reason}</option>
+                      ))}
+                    </optgroup>
+                    {entryReasonSuggestions.filter(reason => !entryReasonOptions.includes(reason)).length > 0 && (
+                      <optgroup label="From existing trades">
+                        {entryReasonSuggestions
+                          .filter(reason => !entryReasonOptions.includes(reason))
+                          .map(reason => (
+                            <option key={reason} value={reason}>{reason}</option>
+                          ))}
+                      </optgroup>
+                    )}
+                  </select>
+                  <span style={{ fontSize: 12, color: '#64748b' }}>or type a custom reason below</span>
+                </div>
+                <textarea rows={2} value={form.reason_for_entry} onChange={e => {
+                  const value = e.target.value;
+                  set('reason_for_entry', value);
+                  setEntryReasonPreset(entryReasonOptions.includes(value) ? value : '');
+                }}
                   placeholder="Why did you enter this trade? (setup, sector, indicator…)" />
               </div>
             </div>
@@ -182,11 +222,11 @@ export default function TradeForm({ trade, defaultTradeType, currency, onSave, o
                             {pl >= 0 ? '+' : ''}{sym}{Math.abs(pl).toLocaleString(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 })}
                           </td>
                           <td style={{ padding: '3px 4px' }}>
-                            <input value={ex.reason ?? ''} onChange={e => updateExit(i, 'reason', e.target.value)}
+                            <input list="exit-reason-options" value={ex.reason ?? ''} onChange={e => updateExit(i, 'reason', e.target.value)}
                               placeholder="Reason" style={{ ...inp, width: 120 }} />
                           </td>
                           <td style={{ padding: '3px 4px' }}>
-                            <input value={ex.emotions ?? ''} onChange={e => updateExit(i, 'emotions', e.target.value)}
+                            <input list="exit-emotion-options" value={ex.emotions ?? ''} onChange={e => updateExit(i, 'emotions', e.target.value)}
                               placeholder="Emotions" style={{ ...inp, width: 100 }} />
                           </td>
                         </tr>
@@ -194,6 +234,16 @@ export default function TradeForm({ trade, defaultTradeType, currency, onSave, o
                     })}
                   </tbody>
                 </table>
+                <datalist id="exit-reason-options">
+                  {exitReasonSuggestions.concat(exitReasonOptions)
+                    .filter((value, index, array) => value && array.indexOf(value) === index)
+                    .map(value => <option key={value} value={value} />)}
+                </datalist>
+                <datalist id="exit-emotion-options">
+                  {emotionSuggestions.concat(emotionOptions)
+                    .filter((value, index, array) => value && array.indexOf(value) === index)
+                    .map(value => <option key={value} value={value} />)}
+                </datalist>
               </div>
             )}
           </div>

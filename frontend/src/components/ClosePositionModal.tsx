@@ -4,6 +4,8 @@ import { Trade, ExitRecord } from '../types';
 interface Props {
   trade: Trade;
   currency: 'INR' | 'USD';
+  exitReasonSuggestions: string[];
+  emotionSuggestions: string[];
   onSave: (exit: ExitRecord) => Promise<void>;
   onClose: () => void;
 }
@@ -13,7 +15,7 @@ function fmtDate(d: string): string {
   return `${day}/${m}/${y.slice(2)}`;
 }
 
-export default function ClosePositionModal({ trade, currency, onSave, onClose }: Props) {
+export default function ClosePositionModal({ trade, currency, exitReasonSuggestions, emotionSuggestions, onSave, onClose }: Props) {
   const today = new Date().toISOString().slice(0, 10);
   const sym = currency === 'INR' ? '₹' : '$';
   const locale = currency === 'INR' ? 'en-IN' : 'en-US';
@@ -165,20 +167,29 @@ export default function ClosePositionModal({ trade, currency, onSave, onClose }:
               <div className="form-section-title">Notes</div>
               <div className="form-group">
                 <label>Reason for Exit</label>
-                <textarea
-                  rows={2}
+                <input
+                  list="exit-reason-options"
                   value={reason}
                   onChange={e => setReason(e.target.value)}
                   placeholder="Target hit, Stop loss, Trailing SL, etc."
+                  style={{ width: '100%', padding: '8px', borderRadius: 4, border: '1px solid #cbd5e1' }}
                 />
+                <datalist id="exit-reason-options">
+                  {exitReasonSuggestions.map(option => <option key={option} value={option} />)}
+                </datalist>
               </div>
               <div className="form-group" style={{ marginTop: 10 }}>
                 <label>Emotions / Psychology</label>
                 <input
+                  list="exit-emotion-options"
                   value={emotions}
                   onChange={e => setEmotions(e.target.value)}
                   placeholder="Disciplined, FOMO, Fearful, etc."
+                  style={{ width: '100%', padding: '8px', borderRadius: 4, border: '1px solid #cbd5e1' }}
                 />
+                <datalist id="exit-emotion-options">
+                  {emotionSuggestions.map(option => <option key={option} value={option} />)}
+                </datalist>
               </div>
             </div>
 

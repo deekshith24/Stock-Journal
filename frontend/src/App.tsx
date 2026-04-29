@@ -58,6 +58,19 @@ function getLatestUsdToInrInfo(rates: Record<string, number>) {
   return { rate: rates[lastDate], date: lastDate };
 }
 
+function topTextSuggestions(values: Array<string | undefined | null>, maxItems = 10): string[] {
+  const counts = values.filter(Boolean).reduce<Record<string, number>>((acc, value) => {
+    const normalized = (value || '').trim();
+    if (!normalized) return acc;
+    acc[normalized] = (acc[normalized] || 0) + 1;
+    return acc;
+  }, {});
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, maxItems)
+    .map(([value]) => value);
+}
+
 // Stock price cache — keyed by "SYMBOL:EXCHANGE"
 // Each entry stores { price, fetchedAt (ISO string) }
 interface CachedPrice { price: StockPrice; fetchedAt: string; }
@@ -129,6 +142,17 @@ export default function App() {
   const isAnalytics = currentPage === 'analytics';
   const trades = isUS ? usTrades : indiaTrades;
   const setTrades = isUS ? setUsTrades : setIndiaTrades;
+
+  const allTrades = [...indiaTrades, ...usTrades];
+  const entryReasonSuggestions = topTextSuggestions(allTrades.map(t => t.reason_for_entry));
+  const exitReasonSuggestions = topTextSuggestions([
+    ...allTrades.map(t => t.reason_for_exit),
+    ...allTrades.flatMap(t => t.exits?.map(e => e.reason) ?? []),
+  ]);
+  const emotionSuggestions = topTextSuggestions([
+    ...allTrades.map(t => t.emotions),
+    ...allTrades.flatMap(t => t.exits?.map(e => e.emotions) ?? []),
+  ]);
 
   // Currency display logic
   const hasUsdToInrRate = Boolean(lastUsdToInrRate);
@@ -533,6 +557,9 @@ export default function App() {
           trade={editingTrade}
           defaultTradeType={editingTrade?.trade_type ?? tradeTypeTab}
           currency={isUS ? 'USD' : 'INR'}
+          entryReasonSuggestions={entryReasonSuggestions}
+          exitReasonSuggestions={exitReasonSuggestions}
+          emotionSuggestions={emotionSuggestions}
           onSave={handleSave}
           onClose={() => { setShowForm(false); setEditingTrade(null); }}
         />
@@ -571,6 +598,8 @@ export default function App() {
         <ClosePositionModal
           trade={closingTrade}
           currency={isUS ? 'USD' : 'INR'}
+          exitReasonSuggestions={exitReasonSuggestions}
+          emotionSuggestions={emotionSuggestions}
           onSave={handleClosePosition}
           onClose={() => setClosingTrade(null)}
         />

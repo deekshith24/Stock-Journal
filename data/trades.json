@@ -670,7 +670,16 @@
     "reason_for_entry": "Base BO",
     "reason_for_exit": "",
     "emotions": "",
-    "trade_type": "swing"
+    "trade_type": "swing",
+    "exits": [
+      {
+        "date": "2026-04-29",
+        "quantity": 25,
+        "price": 1390,
+        "reason": "SL",
+        "emotions": "Didnt sell partials on entry date squat. Avoid more than 4% SL"
+      }
+    ]
   },
   {
     "id": 52,
@@ -739,7 +748,16 @@
     "exit_price": null,
     "reason_for_entry": "Base BO",
     "reason_for_exit": "",
-    "emotions": ""
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-04-29",
+        "quantity": 7,
+        "price": 2450.6,
+        "reason": "Partial profit book",
+        "emotions": ""
+      }
+    ]
   },
   {
     "id": 56,
