@@ -113,6 +113,13 @@
         "price": 34.22,
         "reason": "Extended and Partial Book",
         "emotions": ""
+      },
+      {
+        "date": "2026-04-29",
+        "quantity": 4,
+        "price": 30.03,
+        "reason": "SL",
+        "emotions": ""
       }
     ],
     "id": 6,
@@ -213,5 +220,1161 @@
     ],
     "id": 10,
     "created_at": "2026-04-28T16:47:02.022Z"
+  },
+  {
+    "stock": "APH",
+    "trade_type": "swing",
+    "entry_date": "2026-01-12",
+    "entry_quantity": 1.359,
+    "entry_price": 146.63,
+    "reason_for_entry": "Base BO",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-16",
+        "quantity": 0.328,
+        "price": 152.34,
+        "reason": "",
+        "emotions": ""
+      },
+      {
+        "date": "2026-01-15",
+        "quantity": 0.390143,
+        "price": 153.79,
+        "reason": "",
+        "emotions": ""
+      },
+      {
+        "date": "2026-01-20",
+        "quantity": 0.640857,
+        "price": 152.22,
+        "reason": "",
+        "emotions": ""
+      }
+    ],
+    "id": 11,
+    "created_at": "2026-04-29T13:32:08.151Z"
+  },
+  {
+    "stock": "META",
+    "trade_type": "swing",
+    "entry_date": "2026-01-20",
+    "entry_quantity": 0.327101,
+    "entry_price": 609.63,
+    "reason_for_entry": "",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 12,
+    "created_at": "2026-04-29T13:54:45.740Z"
+  },
+  {
+    "stock": "COHR",
+    "trade_type": "swing",
+    "entry_date": "2026-01-21",
+    "entry_quantity": 0.967502,
+    "entry_price": 206.108,
+    "reason_for_entry": "",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-28",
+        "quantity": 0.967502,
+        "price": 213.64,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 13,
+    "created_at": "2026-04-29T13:55:52.906Z"
+  },
+  {
+    "stock": "MAGS",
+    "trade_type": "swing",
+    "entry_date": "2026-01-02",
+    "entry_quantity": 2.249022556,
+    "entry_price": 66.5,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-02-03",
+        "quantity": 1.124511278,
+        "price": 67.5,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-04",
+        "quantity": 1.124511278,
+        "price": 67.5,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 14,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "PH",
+    "trade_type": "swing",
+    "entry_date": "2026-02-03",
+    "entry_quantity": 0.154502855,
+    "entry_price": 968.01,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-02-11",
+        "quantity": 0.099952023,
+        "price": 1000.48,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-12",
+        "quantity": 0.054550832,
+        "price": 977.42,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-03-13",
+        "quantity": 0.146389209,
+        "price": 895.69,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 15,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "WNC",
+    "trade_type": "swing",
+    "entry_date": "2026-02-03",
+    "entry_quantity": 17.704636255,
+    "entry_price": 11.26,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-02-06",
+        "quantity": 17,
+        "price": 10.6,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-06",
+        "quantity": 0.704636255,
+        "price": 10.6,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 16,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "SPY",
+    "trade_type": "swing",
+    "entry_date": "2026-01-02",
+    "entry_quantity": 0.21812242,
+    "entry_price": 685.67,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-13",
+        "quantity": 0.21812242,
+        "price": 695.53,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 17,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "SPY",
+    "trade_type": "swing",
+    "entry_date": "2026-01-05",
+    "entry_quantity": 0.290292432,
+    "entry_price": 686.93,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-13",
+        "quantity": 0.290292432,
+        "price": 695.53,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 18,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "AMZN",
+    "trade_type": "swing",
+    "entry_date": "2026-01-06",
+    "entry_quantity": 1.288921446,
+    "entry_price": 232.07,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-09",
+        "quantity": 0.408747189,
+        "price": 244.65,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-01-20",
+        "quantity": 0.880174257,
+        "price": 232.94,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 19,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "RKLB",
+    "trade_type": "swing",
+    "entry_date": "2026-01-06",
+    "entry_quantity": 1.260460647,
+    "entry_price": 79.11,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-07",
+        "quantity": 1,
+        "price": 84.5,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-01-07",
+        "quantity": 0.260460647,
+        "price": 84.5,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 20,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "GOOG",
+    "trade_type": "swing",
+    "entry_date": "2026-01-07",
+    "entry_quantity": 0.466744894,
+    "entry_price": 320.43,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-14",
+        "quantity": 0.225033304,
+        "price": 333.28,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-01-16",
+        "quantity": 0.24171159,
+        "price": 330.27,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-04",
+        "quantity": 0.29360571,
+        "price": 337.23,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 21,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "RTX",
+    "trade_type": "swing",
+    "entry_date": "2026-02-04",
+    "entry_quantity": 0.971499561,
+    "entry_price": 205.26,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-02",
+        "quantity": 0.459361899,
+        "price": 208.38,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-05",
+        "quantity": 0.512137662,
+        "price": 207.99,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 22,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "TQQQ",
+    "trade_type": "swing",
+    "entry_date": "2026-02-04",
+    "entry_quantity": 1.99747586,
+    "entry_price": 49.92,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 23,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "UEC",
+    "trade_type": "swing",
+    "entry_date": "2026-02-04",
+    "entry_quantity": 6.320301457,
+    "entry_price": 15.78,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-25",
+        "quantity": 6.320301457,
+        "price": 13.53,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 24,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "TQQQ",
+    "trade_type": "swing",
+    "entry_date": "2026-03-02",
+    "entry_quantity": 1.576971741,
+    "entry_price": 47.42,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 25,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "LNG",
+    "trade_type": "swing",
+    "entry_date": "2026-03-09",
+    "entry_quantity": 1,
+    "entry_price": 256.8,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-10",
+        "quantity": 1,
+        "price": 244,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 26,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "VRT",
+    "trade_type": "swing",
+    "entry_date": "2026-03-09",
+    "entry_quantity": 0.576641322,
+    "entry_price": 259.36,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-11",
+        "quantity": 0.273261872,
+        "price": 274.46,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-03-30",
+        "quantity": 0.30337945,
+        "price": 240.29,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 27,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "PSQ",
+    "trade_type": "swing",
+    "entry_date": "2026-03-13",
+    "entry_quantity": 8.007089783,
+    "entry_price": 31.13,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-27",
+        "quantity": 4.574073227,
+        "price": 32.79,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 28,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "SNDK",
+    "trade_type": "swing",
+    "entry_date": "2026-03-16",
+    "entry_quantity": 0.21756397,
+    "entry_price": 687.43,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-18",
+        "quantity": 0.21756397,
+        "price": 736.28,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 29,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "PSQ",
+    "trade_type": "swing",
+    "entry_date": "2026-03-19",
+    "entry_quantity": 3.134570284,
+    "entry_price": 31.81,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-27",
+        "quantity": 3.134570284,
+        "price": 32.79,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 30,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "LITE",
+    "trade_type": "swing",
+    "entry_date": "2026-03-24",
+    "entry_quantity": 0.252255511,
+    "entry_price": 790.51,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-30",
+        "quantity": 0.252255511,
+        "price": 654.55,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 31,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "VAL",
+    "trade_type": "swing",
+    "entry_date": "2026-03-24",
+    "entry_quantity": 2,
+    "entry_price": 98.64,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-27",
+        "quantity": 1,
+        "price": 103.41,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-03-30",
+        "quantity": 1,
+        "price": 101.96,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 32,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "SPY",
+    "trade_type": "swing",
+    "entry_date": "2026-01-09",
+    "entry_quantity": 0.143921548,
+    "entry_price": 692.81,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-13",
+        "quantity": 0.143921548,
+        "price": 695.53,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 33,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "APH",
+    "trade_type": "swing",
+    "entry_date": "2026-01-12",
+    "entry_quantity": 1.359916526,
+    "entry_price": 146.63,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-15",
+        "quantity": 0.390142401,
+        "price": 153.79,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-01-16",
+        "quantity": 0.328208898,
+        "price": 152.34,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-01-20",
+        "quantity": 0.641565227,
+        "price": 152.22,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 34,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "TSM",
+    "trade_type": "swing",
+    "entry_date": "2026-01-12",
+    "entry_quantity": 0.610967449,
+    "entry_price": 326.38,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-15",
+        "quantity": 0.17224254,
+        "price": 348.35,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-01-16",
+        "quantity": 0.145797248,
+        "price": 342.94,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-01-20",
+        "quantity": 0.292927661,
+        "price": 335.61,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 35,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "TQQQ",
+    "trade_type": "swing",
+    "entry_date": "2026-01-13",
+    "entry_quantity": 1.784040078,
+    "entry_price": 55.89,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-28",
+        "quantity": 5.691732151,
+        "price": 57.85,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 36,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "TQQQ",
+    "trade_type": "swing",
+    "entry_date": "2026-01-15",
+    "entry_quantity": 1.076784257,
+    "entry_price": 55.43,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-28",
+        "quantity": 1.076784257,
+        "price": 57.85,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 37,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "META",
+    "trade_type": "swing",
+    "entry_date": "2026-01-16",
+    "entry_quantity": 0.319656442,
+    "entry_price": 623.83,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 38,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "META",
+    "trade_type": "swing",
+    "entry_date": "2026-01-20",
+    "entry_quantity": 0.327100044,
+    "entry_price": 609.63,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-27",
+        "quantity": 0.298652777,
+        "price": 669.67,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 39,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "COHR",
+    "trade_type": "swing",
+    "entry_date": "2026-01-21",
+    "entry_quantity": 0.967502474,
+    "entry_price": 206.11,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-28",
+        "quantity": 0.967502474,
+        "price": 213.64,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 40,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "TQQQ",
+    "trade_type": "swing",
+    "entry_date": "2026-01-21",
+    "entry_quantity": 1.917205045,
+    "entry_price": 52.01,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-28",
+        "quantity": 1.917205045,
+        "price": 57.85,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 41,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "RL",
+    "trade_type": "swing",
+    "entry_date": "2026-01-22",
+    "entry_quantity": 0.53562507,
+    "entry_price": 372.29,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-23",
+        "quantity": 0.53562507,
+        "price": 364.16,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 42,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "TQQQ",
+    "trade_type": "swing",
+    "entry_date": "2026-01-23",
+    "entry_quantity": 0.912702771,
+    "entry_price": 54.62,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-28",
+        "quantity": 0.912702771,
+        "price": 57.85,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 43,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "EZU",
+    "trade_type": "swing",
+    "entry_date": "2026-01-26",
+    "entry_quantity": 3.722242962,
+    "entry_price": 66.97,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-02-03",
+        "quantity": 1.861121481,
+        "price": 67.5,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-04",
+        "quantity": 1.861121481,
+        "price": 67.5,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 44,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "MAGS",
+    "trade_type": "swing",
+    "entry_date": "2026-01-27",
+    "entry_quantity": 1.499443592,
+    "entry_price": 66.5,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 45,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "NVDA",
+    "trade_type": "swing",
+    "entry_date": "2026-01-28",
+    "entry_quantity": 1.563862602,
+    "entry_price": 191.27,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-02-03",
+        "quantity": 1,
+        "price": 181.41,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-03",
+        "quantity": 0.563862602,
+        "price": 181.41,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 46,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "GEV",
+    "trade_type": "swing",
+    "entry_date": "2026-01-30",
+    "entry_quantity": 0.271729799,
+    "entry_price": 733.85,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-02-03",
+        "quantity": 0.271729799,
+        "price": 781.09,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 47,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "GOOG",
+    "trade_type": "swing",
+    "entry_date": "2026-01-30",
+    "entry_quantity": 0.58651725,
+    "entry_price": 339.99,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-02-03",
+        "quantity": 0.29291154,
+        "price": 341.4,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-04",
+        "quantity": 0.29360571,
+        "price": 337.23,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 48,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "IAU",
+    "trade_type": "swing",
+    "entry_date": "2026-01-30",
+    "entry_quantity": 1.562375948,
+    "entry_price": 95.73,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-02",
+        "quantity": 1.562375948,
+        "price": 100.39,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 49,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "TQQQ",
+    "trade_type": "swing",
+    "entry_date": "2026-01-30",
+    "entry_quantity": 4.512050215,
+    "entry_price": 55.27,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-01-28",
+        "quantity": 1.784,
+        "price": 57.85,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 50,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "UEC",
+    "trade_type": "swing",
+    "entry_date": "2026-01-30",
+    "entry_quantity": 10.69603347,
+    "entry_price": 18.64,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-25",
+        "quantity": 10.69603347,
+        "price": 13.53,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 51,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "PH",
+    "trade_type": "swing",
+    "entry_date": "2026-02-20",
+    "entry_quantity": 0.146389209,
+    "entry_price": 1021.66,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-13",
+        "quantity": 0.146389209,
+        "price": 895.69,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 52,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "IAU",
+    "trade_type": "swing",
+    "entry_date": "2026-02-23",
+    "entry_quantity": 0.717856408,
+    "entry_price": 97.22,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-02",
+        "quantity": 0.717856408,
+        "price": 100.39,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 54,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "GEV",
+    "trade_type": "swing",
+    "entry_date": "2026-02-20",
+    "entry_quantity": 0.178479369,
+    "entry_price": 837.97,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-03-06",
+        "quantity": 0.178479369,
+        "price": 785.58,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
+    "id": 53,
+    "created_at": "2026-04-29T14:00:00.000Z"
   }
 ]
