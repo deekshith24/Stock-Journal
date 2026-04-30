@@ -692,7 +692,16 @@
     "exit_price": null,
     "reason_for_entry": "Slant line BO",
     "reason_for_exit": "",
-    "emotions": ""
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-04-30",
+        "quantity": 34,
+        "price": 492.02,
+        "reason": "Partial profit book",
+        "emotions": ""
+      }
+    ]
   },
   {
     "id": 53,
@@ -894,5 +903,21 @@
     "exits": [],
     "id": 63,
     "created_at": "2026-04-28T13:24:53.337Z"
+  },
+  {
+    "stock": "ANANDRATHI",
+    "trade_type": "swing",
+    "entry_date": "2026-04-30",
+    "entry_quantity": 12,
+    "entry_price": 3617,
+    "reason_for_entry": "Base BO",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 64,
+    "created_at": "2026-04-30T16:01:40.974Z"
   }
 ]

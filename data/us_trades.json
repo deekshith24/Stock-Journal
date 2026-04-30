@@ -271,7 +271,22 @@
     "exit_price": null,
     "reason_for_exit": "",
     "emotions": "",
-    "exits": [],
+    "exits": [
+      {
+        "date": "2026-02-03",
+        "quantity": 0.077330517,
+        "price": 703.48,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-04",
+        "quantity": 0.234306039,
+        "price": 674.03,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
     "id": 12,
     "created_at": "2026-04-29T13:54:45.740Z"
   },
@@ -976,7 +991,22 @@
     "exit_price": null,
     "reason_for_exit": "",
     "emotions": "",
-    "exits": [],
+    "exits": [
+      {
+        "date": "2026-02-02",
+        "quantity": 0.141131706,
+        "price": 708.56,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      },
+      {
+        "date": "2026-02-03",
+        "quantity": 0.178524736,
+        "price": 703.48,
+        "reason": "From brokerage statement",
+        "emotions": ""
+      }
+    ],
     "id": 38,
     "created_at": "2026-04-29T14:00:00.000Z"
   },
@@ -999,9 +1029,48 @@
         "price": 669.67,
         "reason": "From brokerage statement",
         "emotions": ""
+      },
+      {
+        "date": "2026-02-03",
+        "quantity": 0.028447267,
+        "price": 703.48,
+        "reason": "From brokerage statement",
+        "emotions": ""
       }
     ],
     "id": 39,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "META",
+    "trade_type": "swing",
+    "entry_date": "2026-02-05",
+    "entry_quantity": 0.29940812,
+    "entry_price": 666.01,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 55,
+    "created_at": "2026-04-29T14:00:00.000Z"
+  },
+  {
+    "stock": "META",
+    "trade_type": "swing",
+    "entry_date": "2026-02-09",
+    "entry_quantity": 0.149355454,
+    "entry_price": 667.60,
+    "reason_for_entry": "From brokerage statement",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 56,
     "created_at": "2026-04-29T14:00:00.000Z"
   },
   {
