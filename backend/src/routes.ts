@@ -77,8 +77,9 @@ function enrichTrade(trade: Trade, portfolioSize: number) {
   }
 
   let status: 'Open' | 'Partial' | 'Closed';
+  const EPSILON = 1e-9;
   if (totalExitQty <= 0) status = 'Open';
-  else if (totalExitQty >= trade.entry_quantity) status = 'Closed';
+  else if (totalExitQty >= trade.entry_quantity - EPSILON) status = 'Closed';
   else status = 'Partial';
 
   const exitDateForDays = status === 'Closed' ? lastExitDate : null;
