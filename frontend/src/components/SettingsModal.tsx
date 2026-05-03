@@ -44,7 +44,6 @@ export default function SettingsModal({ settings, currentUsdToInr, currentUsdToI
                 <input
                   type="number"
                   min="1"
-                  step="1000"
                   value={portfolioSize}
                   onChange={e => setPortfolioSize(e.target.value)}
                   placeholder="300000"
@@ -62,7 +61,6 @@ export default function SettingsModal({ settings, currentUsdToInr, currentUsdToI
                 <input
                   type="number"
                   min="1"
-                  step="1000"
                   value={usPortfolioSize}
                   onChange={e => setUsPortfolioSize(e.target.value)}
                   placeholder="50000"
