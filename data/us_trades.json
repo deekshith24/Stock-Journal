@@ -216,6 +216,13 @@
         "price": 842.71,
         "reason": "By Mistake while learning IBKR App",
         "emotions": ""
+      },
+      {
+        "date": "2026-05-04",
+        "quantity": 0.2,
+        "price": 878.33,
+        "reason": "2Day coming down after big move of earning. May be flag formation. Can be entered flag BO ",
+        "emotions": "Disciplined"
       }
     ],
     "id": 10,
@@ -1655,6 +1662,13 @@
         "price": 60.84,
         "reason": "",
         "emotions": ""
+      },
+      {
+        "date": "2026-05-04",
+        "quantity": 1,
+        "price": 65.01,
+        "reason": "Price extend from EMA",
+        "emotions": ""
       }
     ],
     "id": 64,
@@ -1974,7 +1988,15 @@
     "exit_price": null,
     "reason_for_exit": "",
     "emotions": "",
-    "exits": [],
+    "exits": [
+      {
+        "date": "2026-05-04",
+        "quantity": 2,
+        "price": 134.37,
+        "reason": "Earning day risk ",
+        "emotions": "Didnt exit partial on entry day squat"
+      }
+    ],
     "id": 79,
     "created_at": "2026-05-03T06:20:53.278Z"
   },
@@ -1993,5 +2015,37 @@
     "exits": [],
     "id": 80,
     "created_at": "2026-05-03T06:21:27.512Z"
+  },
+  {
+    "stock": "TSLA",
+    "trade_type": "swing",
+    "entry_date": "2026-05-05",
+    "entry_quantity": 1,
+    "entry_price": 395,
+    "reason_for_entry": "Reversal play from 7 Bar Arjun",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 81,
+    "created_at": "2026-05-06T02:26:02.966Z"
+  },
+  {
+    "stock": "LUNR",
+    "trade_type": "swing",
+    "entry_date": "2026-05-05",
+    "entry_quantity": 5.605697,
+    "entry_price": 26.68,
+    "reason_for_entry": "Small Base breakout . Cheat entry . 7 Bar Arjun Suggestion",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 82,
+    "created_at": "2026-05-06T02:28:46.030Z"
   }
 ]

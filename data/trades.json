@@ -643,7 +643,16 @@
     "exit_price": null,
     "reason_for_entry": "Price sustaining BO with HVY. SL is breakout area.",
     "reason_for_exit": "",
-    "emotions": ""
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-05-04",
+        "quantity": 40,
+        "price": 326.74,
+        "reason": "Partial profit book",
+        "emotions": ""
+      }
+    ]
   },
   {
     "id": 50,
@@ -744,7 +753,16 @@
     "reason_for_entry": "Base BO",
     "reason_for_exit": "",
     "emotions": "",
-    "trade_type": "swing"
+    "trade_type": "swing",
+    "exits": [
+      {
+        "date": "2026-05-04",
+        "quantity": 33,
+        "price": 938,
+        "reason": "Earning day risk . Lot of tightness from past 4days ",
+        "emotions": "Fear of lossing gain and carrying too many positions"
+      }
+    ]
   },
   {
     "id": 55,
@@ -778,19 +796,6 @@
     "entry_price": 1566,
     "exit_price": null,
     "reason_for_entry": "Flag Breakout. Good volumes before Flag.",
-    "reason_for_exit": "",
-    "emotions": ""
-  },
-  {
-    "id": 57,
-    "stock": "PARAS",
-    "entry_date": "2026-04-23",
-    "exit_date": null,
-    "entry_quantity": 23,
-    "exit_quantity": null,
-    "entry_price": 834,
-    "exit_price": null,
-    "reason_for_entry": "Defence Theme and Base BO",
     "reason_for_exit": "",
     "emotions": ""
   },
@@ -919,5 +924,141 @@
     "exits": [],
     "id": 64,
     "created_at": "2026-04-30T16:01:40.974Z"
+  },
+  {
+    "stock": "KMEW",
+    "trade_type": "swing",
+    "entry_date": "2026-05-04",
+    "entry_quantity": 17,
+    "entry_price": 1861.8,
+    "reason_for_entry": "Slant and very big base breakout with good volume. Suggested by 7 Bar Arjun",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 65,
+    "created_at": "2026-05-04T06:26:40.073Z"
+  },
+  {
+    "stock": "LINDEINDIA",
+    "trade_type": "swing",
+    "entry_date": "2026-05-04",
+    "entry_quantity": 4,
+    "entry_price": 7516,
+    "reason_for_entry": "Base BO",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-05-05",
+        "quantity": 2,
+        "price": 7340,
+        "reason": "Partial exit because of weekness/squat on entry day and next day",
+        "emotions": "Disciplined"
+      }
+    ],
+    "id": 66,
+    "created_at": "2026-05-04T06:27:59.157Z"
+  },
+  {
+    "stock": "SIEMENS",
+    "trade_type": "swing",
+    "entry_date": "2026-05-04",
+    "entry_quantity": 8,
+    "entry_price": 3846,
+    "reason_for_entry": "Base BO",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-05-05",
+        "quantity": 4,
+        "price": 3828.3,
+        "reason": "Partial book in loss. Squat on entry day and weekness on next day",
+        "emotions": "Disciplined"
+      }
+    ],
+    "id": 67,
+    "created_at": "2026-05-04T06:29:25.507Z"
+  },
+  {
+    "stock": "SYRMA",
+    "trade_type": "swing",
+    "entry_date": "2026-05-04",
+    "entry_quantity": 30,
+    "entry_price": 986.95,
+    "reason_for_entry": "Base BO",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 68,
+    "created_at": "2026-05-04T06:30:01.240Z"
+  },
+  {
+    "stock": "PARAS",
+    "trade_type": "swing",
+    "entry_date": "2026-04-23",
+    "entry_quantity": 23,
+    "entry_price": 834,
+    "reason_for_entry": "Defence Theme and Base BO",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [
+      {
+        "date": "2026-05-04",
+        "quantity": 23,
+        "price": 777.04,
+        "reason": "SL hit",
+        "emotions": "Same day price squat is indication of at least 50% exit . It is missed"
+      }
+    ],
+    "id": 69,
+    "created_at": "2026-05-04T06:50:19.028Z"
+  },
+  {
+    "stock": "AEROFLEX",
+    "trade_type": "swing",
+    "entry_date": "2026-05-05",
+    "entry_quantity": 43,
+    "entry_price": 314.4,
+    "reason_for_entry": "Base BO, 7 Bar stock",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 70,
+    "created_at": "2026-05-05T12:13:20.366Z"
+  },
+  {
+    "stock": "DATAPATTNS",
+    "trade_type": "swing",
+    "entry_date": "2026-05-05",
+    "entry_quantity": 9,
+    "entry_price": 4181.5,
+    "reason_for_entry": "Base BO",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 71,
+    "created_at": "2026-05-05T12:14:04.508Z"
   }
 ]
