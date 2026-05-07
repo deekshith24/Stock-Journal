@@ -709,6 +709,13 @@
         "price": 492.02,
         "reason": "Partial profit book",
         "emotions": ""
+      },
+      {
+        "date": "2026-05-07",
+        "quantity": 34,
+        "price": 474.2,
+        "reason": "Weekness . Below 21 ema",
+        "emotions": "Disciplined"
       }
     ]
   },
@@ -937,7 +944,15 @@
     "exit_price": null,
     "reason_for_exit": "",
     "emotions": "",
-    "exits": [],
+    "exits": [
+      {
+        "date": "2026-05-06",
+        "quantity": 6,
+        "price": 2160.56,
+        "reason": "Partial profit book on red candle",
+        "emotions": "Disciplined"
+      }
+    ],
     "id": 65,
     "created_at": "2026-05-04T06:26:40.073Z"
   },
@@ -1001,7 +1016,15 @@
     "exit_price": null,
     "reason_for_exit": "",
     "emotions": "",
-    "exits": [],
+    "exits": [
+      {
+        "date": "2026-05-06",
+        "quantity": 10,
+        "price": 1054.52,
+        "reason": "Partial profit book. Stock is cooling of after continues 2 day rally ",
+        "emotions": "Disciplined"
+      }
+    ],
     "id": 68,
     "created_at": "2026-05-04T06:30:01.240Z"
   },
@@ -1041,7 +1064,15 @@
     "exit_price": null,
     "reason_for_exit": "",
     "emotions": "",
-    "exits": [],
+    "exits": [
+      {
+        "date": "2026-05-07",
+        "quantity": 43,
+        "price": 367.85,
+        "reason": "Too extend and 1:2 target hit and extended dot indicator",
+        "emotions": "Disciplined"
+      }
+    ],
     "id": 70,
     "created_at": "2026-05-05T12:13:20.366Z"
   },
@@ -1060,5 +1091,53 @@
     "exits": [],
     "id": 71,
     "created_at": "2026-05-05T12:14:04.508Z"
+  },
+  {
+    "stock": "HBLENGINE",
+    "trade_type": "swing",
+    "entry_date": "2026-05-06",
+    "entry_quantity": 36,
+    "entry_price": 835.94,
+    "reason_for_entry": "Gap filling setup and base BO from 7 Bar Nirvair",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 72,
+    "created_at": "2026-05-06T08:27:45.179Z"
+  },
+  {
+    "stock": "TATASTEEL",
+    "trade_type": "swing",
+    "entry_date": "2026-05-06",
+    "entry_quantity": 106,
+    "entry_price": 216.6,
+    "reason_for_entry": "Base BO",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 73,
+    "created_at": "2026-05-06T16:22:12.878Z"
+  },
+  {
+    "stock": "HINDCOPPER",
+    "trade_type": "swing",
+    "entry_date": "2026-05-07",
+    "entry_quantity": 56,
+    "entry_price": 575.65,
+    "reason_for_entry": "Slant line BO. 7 Bar Arjun suggestion .",
+    "exit_date": null,
+    "exit_quantity": null,
+    "exit_price": null,
+    "reason_for_exit": "",
+    "emotions": "",
+    "exits": [],
+    "id": 74,
+    "created_at": "2026-05-07T15:51:43.278Z"
   }
 ]
